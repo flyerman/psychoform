@@ -50,8 +50,11 @@ function onFormSubmit(event) {
 function addQuestion(repbody, formItem, response) {
 
     // Add the question title
-    repbody.appendParagraph('');
+    repbody.appendParagraph('').setBold(false);
     repbody.appendParagraph('Question: ' + formItem.getTitle());
+
+    // Retrieve the answer
+    var responseItem = response.getResponseForItem(formItem);
 
     switch (formItem.getType()) {
         
@@ -63,13 +66,33 @@ function addQuestion(repbody, formItem, response) {
         //     break;
         // case FormApp.ItemType.LIST:
         //     break;
-        // case FormApp.ItemType.MULTIPLE_CHOICE:
-        //     break;
+        
+        case FormApp.ItemType.MULTIPLE_CHOICE: {
+            var question = formItem.asMultipleChoiceItem();
+            var choices = question.getChoices();
+            var responseText = responseItem.getResponse();
+            var found = false;
+            for (const choice of choices) {
+                var choiceText = choice.getValue();
+                var bullet = '◦';
+                var bold = false;
+                if (responseText == choiceText) {
+                    bullet = '⦿';
+                    found = true;
+                    bold = true;
+                }
+                repbody.appendParagraph(bullet + ' ' + choiceText).setBold(bold);
+            }
+            if (!found) {
+                repbody.appendParagraph("⦿ Other: " + responseText).setBold(true);
+            }
+            break;
+        }
         
         // Short answer type
         case FormApp.ItemType.PARAGRAPH_TEXT:
         case FormApp.ItemType.TEXT: {
-            repbody.appendParagraph("Answer: " + response.getResponseForItem(formItem).getResponse());            
+            repbody.appendParagraph("Answer: " + responseItem.getResponse());            
             break;
         }
 
