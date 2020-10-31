@@ -62,13 +62,27 @@ function addQuestion(repbody, formItem, response) {
         //     break;
         // case FormApp.ItemType.GRID:
         //     break;
-        // case FormApp.ItemType.LIST:
-        //     break;
-
-        case FormApp.ItemType.CHECKBOX: {
+        
+        case FormApp.ItemType.LIST: {
             var question = formItem.asListItem();
             var choices = question.getChoices();
-            var responseList = responseItem.getResponse();
+            var responseText = responseItem ? responseItem.getResponse() : '';
+            for (const choice of choices) {
+                var choiceText = choice.getValue();
+                if (responseText == choiceText) {
+                    repbody.appendParagraph(choiceText + ' (*)').setBold(true);
+                }
+                else {
+                    repbody.appendParagraph(choiceText).setBold(false);
+                }    
+            }
+            break;
+        }
+
+        case FormApp.ItemType.CHECKBOX: {
+            var question = formItem.asCheckboxItem();
+            var choices = question.getChoices();
+            var responseList = responseItem ? responseItem.getResponse() : [];
             // Add each box tat was checked
             for (const choice of choices) {
                 var choiceText = choice.getValue();
@@ -82,6 +96,9 @@ function addQuestion(repbody, formItem, response) {
                     }
                 }
                 repbody.appendParagraph(bullet + ' ' + choiceText).setBold(found);
+            }
+            if (!responseItem) {
+                break;
             }
             // Detect and add the 'Other' box
             for (const responseText of responseList) {
@@ -103,7 +120,7 @@ function addQuestion(repbody, formItem, response) {
         case FormApp.ItemType.MULTIPLE_CHOICE: {
             var question = formItem.asMultipleChoiceItem();
             var choices = question.getChoices();
-            var responseText = responseItem.getResponse();
+            var responseText = responseItem ? responseItem.getResponse() : '';
             var found = false;
             for (const choice of choices) {
                 var choiceText = choice.getValue();
@@ -116,7 +133,7 @@ function addQuestion(repbody, formItem, response) {
                 }
                 repbody.appendParagraph(bullet + ' ' + choiceText).setBold(bold);
             }
-            if (!found) {
+            if (responseItem && !found) {
                 repbody.appendParagraph("⦿ Other: " + responseText).setBold(true);
             }
             break;
