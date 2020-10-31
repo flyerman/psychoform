@@ -58,14 +58,47 @@ function addQuestion(repbody, formItem, response) {
 
     switch (formItem.getType()) {
         
-        // case FormApp.ItemType.CHECKBOX:
-        //     break;
         // case FormApp.ItemType.CHECKBOX_GRID:
         //     break;
         // case FormApp.ItemType.GRID:
         //     break;
         // case FormApp.ItemType.LIST:
         //     break;
+
+        case FormApp.ItemType.CHECKBOX: {
+            var question = formItem.asListItem();
+            var choices = question.getChoices();
+            var responseList = responseItem.getResponse();
+            // Add each box tat was checked
+            for (const choice of choices) {
+                var choiceText = choice.getValue();
+                var bullet = '🔲';
+                var found = false;
+                for (const responseText of responseList) {
+                    if (responseText == choiceText) {
+                        bullet = '✅';
+                        found = true;
+                        break;
+                    }
+                }
+                repbody.appendParagraph(bullet + ' ' + choiceText).setBold(found);
+            }
+            // Detect and add the 'Other' box
+            for (const responseText of responseList) {
+                var found = false;
+                for (const choice of choices) {
+                    var choiceText = choice.getValue();
+                    if (responseText == choiceText) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    repbody.appendParagraph("✅ Other: " + responseText).setBold(true);
+                }
+            }
+            break;
+        }
         
         case FormApp.ItemType.MULTIPLE_CHOICE: {
             var question = formItem.asMultipleChoiceItem();
