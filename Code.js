@@ -24,8 +24,10 @@ function renderForm(form, response, folder) {
         var responseItem = response.getResponseForItem(formItem);
 
         switch (formItem.getType()) {
-
-            // For supported question types
+            // Ignore unsupported elements
+            default:
+                break;
+            // Supported question types
             case FormApp.ItemType.CHECKBOX:
                 addQuestionCheckbox(repbody, formItem.asCheckboxItem(), responseItem);
                 break;
@@ -41,21 +43,14 @@ function renderForm(form, response, folder) {
             case FormApp.ItemType.MULTIPLE_CHOICE:
                 addQuestionMultipleChoice(repbody, formItem.asMultipleChoiceItem(), responseItem);
                 break;
-            case FormApp.ItemType.PARAGRAPH_TEXT:
-            case FormApp.ItemType.TEXT:
-                addQuestionText(repbody, formItem, responseItem);
-                break;
             case FormApp.ItemType.SCALE:
                 addQuestionScale(repbody, formItem.asScaleItem(), responseItem);
                 break;
+            case FormApp.ItemType.PARAGRAPH_TEXT:
+            case FormApp.ItemType.TEXT:
             case FormApp.ItemType.DATE:
-                addQuestionDate(repbody, formItem, responseItem);
-                break;
             case FormApp.ItemType.TIME:
-                addQuestionTime(repbody, formItem, responseItem);
-                break;
-            // For other elements
-            default:
+                    addQuestionText(repbody, formItem, responseItem);
                 break;
         }
     }
