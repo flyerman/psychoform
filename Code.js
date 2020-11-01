@@ -77,7 +77,7 @@ function addQuestionCheckboxGrid(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
     var questionRows = question.getRows();
     var questionCols = question.getColumns();
-    var answers = responseItem ? responseItem.getResponse() : '';
+    var answers = responseItem ? responseItem.getResponse() : [[]];
 
     var table = [];
 
@@ -89,7 +89,16 @@ function addQuestionCheckboxGrid(repbody, question, responseItem) {
     for (var i = 0; i < questionRows.length; i++) {
         var row = [questionRows[i]];
         for (var j = 0; j < questionCols.length; j++) {
-            if (answers[i][j] == questionCols[j]) {
+            var found = false;
+            if (answers[i]) {
+                for (var a = 0; a < answers[i].length; a++) {
+                    if (answers[i][a] == questionCols[j]) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (found) {
                 row.push('✅');
             } else {
                 row.push('🔲');
@@ -106,7 +115,7 @@ function addQuestionGrid(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
     var questionRows = question.getRows();
     var questionCols = question.getColumns();
-    var answers = responseItem ? responseItem.getResponse() : '';
+    var answers = responseItem ? responseItem.getResponse() : [];
 
     var table = [];
 
