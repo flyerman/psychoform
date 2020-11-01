@@ -45,19 +45,15 @@ function renderForm(form, response, folder) {
             case FormApp.ItemType.TEXT:
                 addQuestionText(repbody, formItem, responseItem);
                 break;
-
             case FormApp.ItemType.SCALE:
                 addQuestionScale(repbody, formItem.asScaleItem(), responseItem);
                 break;
-
             case FormApp.ItemType.DATE:
                 addQuestionDate(repbody, formItem, responseItem);
                 break;
-
             case FormApp.ItemType.TIME:
                 addQuestionTime(repbody, formItem, responseItem);
                 break;
-
             // For other elements
             default:
                 break;
