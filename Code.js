@@ -30,7 +30,7 @@ function renderForm(form, response, folder) {
                 addQuestionCheckbox(repbody, formItem.asCheckboxItem(), responseItem);
                 break;
             case FormApp.ItemType.CHECKBOX_GRID:
-                addQuestionCheckboxGrid(repbody, formItem, responseItem);
+                addQuestionCheckboxGrid(repbody, formItem.asCheckboxGridItem(), responseItem);
                 break;
             case FormApp.ItemType.GRID:
                 addQuestionGrid(repbody, formItem.asGridItem(), responseItem);
@@ -75,7 +75,30 @@ function addQuestionHeader(repbody, question) {
 
 function addQuestionCheckboxGrid(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
-    repbody.appendParagraph('ERROR: checkboxgrid not yet supported').setBold(false);
+    var questionRows = question.getRows();
+    var questionCols = question.getColumns();
+    var answers = responseItem ? responseItem.getResponse() : '';
+
+    var table = [];
+
+    // Top header row:  ' ' , col1, col2, col3...
+    var header = [''].concat(questionCols);
+    table.push(header);
+
+    // Rows:
+    for (var i = 0; i < questionRows.length; i++) {
+        var row = [questionRows[i]];
+        for (var j = 0; j < questionCols.length; j++) {
+            if (answers[i][j] == questionCols[j]) {
+                row.push('✅');
+            } else {
+                row.push('🔲');
+            }
+        }
+        table.push(row);
+    }
+
+    repbody.appendTable(table);
 }
 
 
