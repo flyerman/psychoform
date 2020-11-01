@@ -8,14 +8,22 @@ function onFormSubmit(event) {
 }
 
 function renderForm(form, response, folder) {
+
+    var firstName = getTextResponse(form, response, 'First Name');
+    var lastName = getTextResponse(form, response, 'Last Name');
+    var fileName = 'Form responses for ' + firstName + ' ' + lastName;
+
     // Create a new report
-    var report = DocumentApp.create('Report assessment');
+    var report = DocumentApp.create(fileName);
     var repbody = report.getBody();
 
     // Move the report into the drive folder
     var file = DriveApp.getFileById(report.getId());
     folder.addFile(file);
     DriveApp.getRootFolder().removeFile(file);
+
+    var firstName = '?';
+    var lastName = '?';
 
     // Itererate over element in the form
     var formItems = form.getItems();
@@ -46,11 +54,18 @@ function renderForm(form, response, folder) {
             case FormApp.ItemType.SCALE:
                 addQuestionScale(repbody, formItem.asScaleItem(), responseItem);
                 break;
-            case FormApp.ItemType.PARAGRAPH_TEXT:
             case FormApp.ItemType.TEXT:
+                if (responseItem) {
+                    if (formItem.getTitle() == 'First Name') {
+                        firstName = responseItem.getResponse();
+                    } else if (formItem.getTitle() == 'Last Name') {
+                        lastName = responseItem.getResponse();
+                    }
+                }
+            case FormApp.ItemType.PARAGRAPH_TEXT:
             case FormApp.ItemType.DATE:
             case FormApp.ItemType.TIME:
-                    addQuestionText(repbody, formItem, responseItem);
+                addQuestionText(repbody, formItem, responseItem);
                 break;
         }
     }
@@ -60,6 +75,26 @@ function renderForm(form, response, folder) {
 
     // Save report
     report.saveAndClose();
+    var pdf = report.getAs(MimeType.PDF);
+    folder.createFile(pdf).setName(fileName);
+
+    //GmailApp.sendEmail('foo@example.com', 'answers', 'See answers attached ', {attachments: pdf});
+}
+
+
+function getTextResponse(form, response, questionText) {
+    var formItems = form.getItems();
+    for (var i = 0, j = 0; i < formItems.length; i++) {
+        var formItem = formItems[i];
+        var responseItem = response.getResponseForItem(formItem);
+
+        if (responseItem && formItem.getType() == FormApp.ItemType.TEXT) {
+            if (formItem.getTitle() == questionText) {
+                return responseItem.getResponse();
+            }
+        }
+    }
+    return '?';
 }
 
 
