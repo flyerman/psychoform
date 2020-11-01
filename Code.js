@@ -33,7 +33,7 @@ function renderForm(form, response, folder) {
                 addQuestionCheckboxGrid(repbody, formItem, responseItem);
                 break;
             case FormApp.ItemType.GRID:
-                addQuestionGrid(repbody, formItem, responseItem);
+                addQuestionGrid(repbody, formItem.asGridItem(), responseItem);
                 break;
             case FormApp.ItemType.LIST:
                 addQuestionList(repbody, formItem.asListItem(), responseItem);
@@ -75,13 +75,36 @@ function addQuestionHeader(repbody, question) {
 
 function addQuestionCheckboxGrid(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
-    repbody.appendParagraph('ERROR: checboxgrid not yet supported').setBold(false);
+    repbody.appendParagraph('ERROR: checkboxgrid not yet supported').setBold(false);
 }
 
 
 function addQuestionGrid(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
-    repbody.appendParagraph('ERROR: grid not yet supported').setBold(false);
+    var questionRows = question.getRows();
+    var questionCols = question.getColumns();
+    var answers = responseItem ? responseItem.getResponse() : '';
+
+    var table = [];
+
+    // Top header row:  ' ' , col1, col2, col3...
+    var header = [''].concat(questionCols);
+    table.push(header);
+
+    // Rows:
+    for (var i = 0; i < questionRows.length; i++) {
+        var row = [questionRows[i]];
+        for (var j = 0; j < questionCols.length; j++) {
+            if (answers[i] == questionCols[j]) {
+                row.push('⦿');
+            } else {
+                row.push('◦');
+            }
+        }
+        table.push(row);
+    }
+
+    repbody.appendTable(table);
 }
 
 
@@ -177,15 +200,17 @@ function addQuestionMultipleChoice(repbody, question, responseItem) {
 
 function addQuestionText(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
-    repbody.appendParagraph("➡ " + responseItem.getResponse()).setBold(false);
+    var responseText = responseItem ? responseItem.getResponse() : '';
+    repbody.appendParagraph("➡ " + responseText).setBold(false);
 }
 
 
 function addQuestionScale(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
+    var responseText = responseItem ? responseItem.getResponse() : '';
     var steps = [];
     for (var i = question.getLowerBound(); i <= question.getUpperBound(); i++) {
-        if (i == responseItem.getResponse()) {
+        if (i == responseText) {
             steps.push('⦿ ' + i);
         } else {
             steps.push('◦ ' + i);
