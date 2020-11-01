@@ -89,12 +89,6 @@ function addQuestionGrid(repbody, question, responseItem) {
 }
 
 
-function addQuestionScale(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question);
-    repbody.appendParagraph('ERROR: scale not yet supported').setBold(false);
-}
-
-
 function addQuestionDate(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
     repbody.appendParagraph('ERROR: date not yet supported').setBold(false);
@@ -188,4 +182,17 @@ function addQuestionMultipleChoice(repbody, question, responseItem) {
 function addQuestionText(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
     repbody.appendParagraph("➡ " + responseItem.getResponse()).setBold(false);
+}
+
+
+function addQuestionScale(repbody, question, responseItem) {
+    addQuestionHeader(repbody, question);
+    for (var i = question.getLowerBound(); i <= question.getUpperBound(); i++) {
+        if (i == responseItem.getResponse()) {
+            repbody.appendParagraph('⦿ ' + i).setBold(true);
+        } else {
+            repbody.appendParagraph('◦ ' + i).setBold(false);
+        }
+
+    }
 }
