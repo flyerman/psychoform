@@ -46,6 +46,18 @@ function renderForm(form, response, folder) {
                 addQuestionText(repbody, formItem, responseItem);
                 break;
 
+            case FormApp.ItemType.SCALE:
+                addQuestionScale(repbody, formItem, responseItem);
+                break;
+
+            case FormApp.ItemType.DATE:
+                addQuestionDate(repbody, formItem, responseItem);
+                break;
+
+            case FormApp.ItemType.TIME:
+                addQuestionTime(repbody, formItem, responseItem);
+                break;
+
             // For other elements
             default:
                 break;
@@ -74,6 +86,24 @@ function addQuestionCheckboxGrid(repbody, question, responseItem) {
 function addQuestionGrid(repbody, question, responseItem) {
     addQuestionHeader(repbody, question)
     repbody.appendParagraph('ERROR: grid not yet supported').setBold(false);
+}
+
+
+function addQuestionScale(repbody, question, responseItem) {
+    addQuestionHeader(repbody, question)
+    repbody.appendParagraph('ERROR: scale not yet supported').setBold(false);
+}
+
+
+function addQuestionDate(repbody, question, responseItem) {
+    addQuestionHeader(repbody, question)
+    repbody.appendParagraph('ERROR: date not yet supported').setBold(false);
+}
+
+
+function addQuestionTime(repbody, question, responseItem) {
+    addQuestionHeader(repbody, question)
+    repbody.appendParagraph('ERROR: time not yet supported').setBold(false);
 }
 
 
