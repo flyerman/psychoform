@@ -108,17 +108,17 @@ function addQuestionCheckboxGrid(repbody, question, responseItem) {
     }
 
     var table = repbody.appendTable(tableCells);
+    alignInnerCells(table, questionRows.length, questionCols.length);
+}
 
+
+function alignInnerCells(table, rowCount, colCount) {
     var style = {};
     style[DocumentApp.Attribute.HORIZONTAL_ALIGNMENT] = DocumentApp.HorizontalAlignment.CENTER;
-
-    // center align cell's text
-    for (var i = 0; i < questionRows.length; i++) {
-        for (var j = 0; j < questionCols.length; j++) {
+    for (var i = 0; i < rowCount; i++) {
+        for (var j = 0; j < colCount; j++) {
             var cell = table.getCell(i + 1, j + 1);
-            // Obtain the first element in the cell
             var firstChild = cell.getChild(0);
-            // If it's a paragraph, set its contents.
             if (firstChild.getType() == DocumentApp.ElementType.PARAGRAPH) {
                 firstChild.asParagraph().setAttributes(style);
             }
@@ -133,11 +133,11 @@ function addQuestionGrid(repbody, question, responseItem) {
     var questionCols = question.getColumns();
     var answers = responseItem ? responseItem.getResponse() : [];
 
-    var table = [];
+    var tableCells = [];
 
     // Top header row:  ' ' , col1, col2, col3...
     var header = [''].concat(questionCols);
-    table.push(header);
+    tableCells.push(header);
 
     // Rows:
     for (var i = 0; i < questionRows.length; i++) {
@@ -149,10 +149,11 @@ function addQuestionGrid(repbody, question, responseItem) {
                 row.push('◦');
             }
         }
-        table.push(row);
+        tableCells.push(row);
     }
 
-    repbody.appendTable(table);
+    var table = repbody.appendTable(tableCells);
+    alignInnerCells(table, questionRows.length, questionCols.length);
 }
 
 
