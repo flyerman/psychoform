@@ -47,7 +47,7 @@ function renderForm(form, response, folder) {
                 break;
 
             case FormApp.ItemType.SCALE:
-                addQuestionScale(repbody, formItem, responseItem);
+                addQuestionScale(repbody, formItem.asScaleItem(), responseItem);
                 break;
 
             case FormApp.ItemType.DATE:
@@ -78,37 +78,37 @@ function addQuestionHeader(repbody, question) {
 
 
 function addQuestionCheckboxGrid(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question)
+    addQuestionHeader(repbody, question);
     repbody.appendParagraph('ERROR: checboxgrid not yet supported').setBold(false);
 }
 
 
 function addQuestionGrid(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question)
+    addQuestionHeader(repbody, question);
     repbody.appendParagraph('ERROR: grid not yet supported').setBold(false);
 }
 
 
 function addQuestionScale(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question)
+    addQuestionHeader(repbody, question);
     repbody.appendParagraph('ERROR: scale not yet supported').setBold(false);
 }
 
 
 function addQuestionDate(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question)
+    addQuestionHeader(repbody, question);
     repbody.appendParagraph('ERROR: date not yet supported').setBold(false);
 }
 
 
 function addQuestionTime(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question)
+    addQuestionHeader(repbody, question);
     repbody.appendParagraph('ERROR: time not yet supported').setBold(false);
 }
 
 
 function addQuestionList(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question)
+    addQuestionHeader(repbody, question);
     var choices = question.getChoices();
     var responseText = responseItem ? responseItem.getResponse() : '';
     for (const choice of choices) {
@@ -124,7 +124,7 @@ function addQuestionList(repbody, question, responseItem) {
 
 
 function addQuestionCheckbox(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question)
+    addQuestionHeader(repbody, question);
 
     var choices = question.getChoices();
     var responseList = responseItem ? responseItem.getResponse() : [];
@@ -163,7 +163,7 @@ function addQuestionCheckbox(repbody, question, responseItem) {
 
 
 function addQuestionMultipleChoice(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question)
+    addQuestionHeader(repbody, question);
 
     var choices = question.getChoices();
     var responseText = responseItem ? responseItem.getResponse() : '';
@@ -186,6 +186,6 @@ function addQuestionMultipleChoice(repbody, question, responseItem) {
 
 
 function addQuestionText(repbody, question, responseItem) {
-    addQuestionHeader(repbody, question)
+    addQuestionHeader(repbody, question);
     repbody.appendParagraph("➡ " + responseItem.getResponse()).setBold(false);
 }
