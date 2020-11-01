@@ -55,6 +55,9 @@ function renderForm(form, response, folder) {
         }
     }
 
+    // Remove empty line at the beginning of the document
+    repbody.removeChild(repbody.getChild(0));
+
     // Save report
     report.saveAndClose();
 }
