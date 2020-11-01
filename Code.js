@@ -187,12 +187,14 @@ function addQuestionText(repbody, question, responseItem) {
 
 function addQuestionScale(repbody, question, responseItem) {
     addQuestionHeader(repbody, question);
+    var steps = [];
     for (var i = question.getLowerBound(); i <= question.getUpperBound(); i++) {
         if (i == responseItem.getResponse()) {
-            repbody.appendParagraph('⦿ ' + i).setBold(true);
+            steps.push('⦿ ' + i);
         } else {
-            repbody.appendParagraph('◦ ' + i).setBold(false);
+            steps.push('◦ ' + i);
         }
 
     }
+    repbody.appendParagraph(steps.join('    ')).setBold(false);
 }
