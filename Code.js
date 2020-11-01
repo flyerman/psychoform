@@ -4,13 +4,38 @@ function onFormSubmit(event) {
     // Locate the drive folder
     var folder = DriveApp.getFolderById('1l1PNYtABFmZyZTI-4gqLGNyg1OwNMqm7');
 
-    renderForm(event.source, event.response, folder);
+    var report = renderForm(event.source, event.response, folder);
+
+    shareReport(report, getResponse(event.response, 'Psycho'));
 }
+
+
+function shareReport(report, psycho) {
+    // Retreive the email
+    var sheet = SpreadsheetApp.openById('1SNMlHuP_K-5sJW-9WNwLFeUPFFc8qBCe0ODzd9RRuS0');
+    var data = sheet.getDataRange().getValues();
+    var email = null;
+    for (var i = 0; i < data.length; i++) {
+        if (data[i][0] == psycho) {
+            email = data[i][1];
+        }
+    }
+
+    if (!email || email == '') {
+        Logger.log('Could not find email for ' + psycho);
+        return;
+    }
+
+    report.addEditor(email);
+
+    GmailApp.sendEmail(email, report.getName(), 'See answers at ' + report.getUrl(), {});
+}
+
 
 function renderForm(form, response, folder) {
 
-    var firstName = getTextResponse(form, response, 'First Name');
-    var lastName = getTextResponse(form, response, 'Last Name');
+    var firstName = getResponse(response, 'First Name');
+    var lastName = getResponse(response, 'Last Name');
     var fileName = 'Form responses for ' + firstName + ' ' + lastName;
 
     // Create a new report
@@ -75,23 +100,24 @@ function renderForm(form, response, folder) {
 
     // Save report
     report.saveAndClose();
-    var pdf = report.getAs(MimeType.PDF);
-    folder.createFile(pdf).setName(fileName);
+
+    //var pdf = report.getAs(MimeType.PDF);
+    //folder.createFile(pdf).setName(fileName);
 
     //GmailApp.sendEmail('foo@example.com', 'answers', 'See answers attached ', {attachments: pdf});
+
+    return report;
 }
 
 
-function getTextResponse(form, response, questionText) {
-    var formItems = form.getItems();
-    for (var i = 0, j = 0; i < formItems.length; i++) {
-        var formItem = formItems[i];
-        var responseItem = response.getResponseForItem(formItem);
-
-        if (responseItem && formItem.getType() == FormApp.ItemType.TEXT) {
-            if (formItem.getTitle() == questionText) {
-                return responseItem.getResponse();
-            }
+function getResponse(response, questionText) {
+    for (const r of response.getItemResponses()) {
+        if (!r) {
+            continue;
+        }
+        var formItem = r.getItem();
+        if (formItem.getTitle() == questionText) {
+            return r.getResponse().toString();
         }
     }
     return '?';
