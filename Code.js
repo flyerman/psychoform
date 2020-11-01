@@ -46,7 +46,7 @@ function renderForm(form, response, folder) {
                 addQuestionText(repbody, formItem, responseItem);
                 break;
 
-            // For other elements 
+            // For other elements
             default:
                 break;
         }
@@ -59,21 +59,21 @@ function renderForm(form, response, folder) {
 
 // Add the question title
 function addQuestionHeader(repbody, question) {
-    repbody.appendParagraph('').setBold(false);
     repbody.appendParagraph('Question: ' + question.getTitle())
-           .setHeading(DocumentApp.ParagraphHeading.HEADING3);
+           .setHeading(DocumentApp.ParagraphHeading.HEADING3)
+           .setBold(true);
 }
 
 
 function addQuestionCheckboxGrid(repbody, question, responseItem) {
     addQuestionHeader(repbody, question)
-    repbody.appendParagraph('ERROR: checboxgrid not yet supported');
+    repbody.appendParagraph('ERROR: checboxgrid not yet supported').setBold(false);
 }
 
 
 function addQuestionGrid(repbody, question, responseItem) {
     addQuestionHeader(repbody, question)
-    repbody.appendParagraph('ERROR: grid not yet supported');
+    repbody.appendParagraph('ERROR: grid not yet supported').setBold(false);
 }
 
 
@@ -88,7 +88,7 @@ function addQuestionList(repbody, question, responseItem) {
         }
         else {
             repbody.appendParagraph(choiceText).setBold(false);
-        }    
+        }
     }
 }
 
@@ -157,5 +157,5 @@ function addQuestionMultipleChoice(repbody, question, responseItem) {
 
 function addQuestionText(repbody, question, responseItem) {
     addQuestionHeader(repbody, question)
-    repbody.appendParagraph("➡ " + responseItem.getResponse());            
+    repbody.appendParagraph("➡ " + responseItem.getResponse()).setBold(false);
 }
