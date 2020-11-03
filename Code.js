@@ -2,17 +2,17 @@
 
 function onFormSubmit(event) {
     // Locate the drive folder
-    var folder = DriveApp.getFolderById('1l1PNYtABFmZyZTI-4gqLGNyg1OwNMqm7');
+    var folder = DriveApp.getFolderById(folderId);
 
     var report = renderForm(event.source, event.response, folder);
 
-    shareReport(report, getResponse(event.response, 'Psycho'));
+    shareReport(report, getResponse(event.response, psychTitle));
 }
 
 
 function shareReport(report, psycho) {
     // Retreive the email
-    var sheet = SpreadsheetApp.openById('1SNMlHuP_K-5sJW-9WNwLFeUPFFc8qBCe0ODzd9RRuS0');
+    var sheet = SpreadsheetApp.openById(spreadSheetId);
     var data = sheet.getDataRange().getValues();
     var email = null;
     for (var i = 0; i < data.length; i++) {
@@ -34,9 +34,10 @@ function shareReport(report, psycho) {
 
 function renderForm(form, response, folder) {
 
-    var firstName = getResponse(response, 'First Name');
-    var lastName = getResponse(response, 'Last Name');
-    var fileName = 'Form responses for ' + firstName + ' ' + lastName;
+    //var firstName = getResponse(response, 'First Name');
+    //var lastName = getResponse(response, 'Last Name');
+    //var fileName = 'Form responses for ' + firstName + ' ' + lastName;
+    var fileName = 'Form responses';
 
     // Create a new report
     var report = DocumentApp.create(fileName);
@@ -46,9 +47,6 @@ function renderForm(form, response, folder) {
     var file = DriveApp.getFileById(report.getId());
     folder.addFile(file);
     DriveApp.getRootFolder().removeFile(file);
-
-    var firstName = '?';
-    var lastName = '?';
 
     // Itererate over element in the form
     var formItems = form.getItems();
@@ -80,13 +78,6 @@ function renderForm(form, response, folder) {
                 addQuestionScale(repbody, formItem.asScaleItem(), responseItem);
                 break;
             case FormApp.ItemType.TEXT:
-                if (responseItem) {
-                    if (formItem.getTitle() == 'First Name') {
-                        firstName = responseItem.getResponse();
-                    } else if (formItem.getTitle() == 'Last Name') {
-                        lastName = responseItem.getResponse();
-                    }
-                }
             case FormApp.ItemType.PARAGRAPH_TEXT:
             case FormApp.ItemType.DATE:
             case FormApp.ItemType.TIME:
